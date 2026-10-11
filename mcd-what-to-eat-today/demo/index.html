@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>今天吃什么 · 麦当劳门店服务 Skill 演示</title>
+<style>
+:root{--mcd-y:#ffc72c;--mcd-r:#da291c;--ink:#1f1f1f;--bg:#f6f3ec;--card:#fff}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Segoe UI",sans-serif;
+     background:var(--bg);color:var(--ink);display:flex;justify-content:center;padding:16px}
+.wrap{width:100%;max-width:420px}
+header{background:var(--mcd-r);color:#fff;border-radius:14px 14px 0 0;padding:20px 18px}
+header h1{font-size:20px;line-height:1.4}
+header .brand{color:var(--mcd-y);font-weight:700}
+header p{margin-top:6px;font-size:13px;opacity:.92;line-height:1.6}
+.phone{background:#efe9dd;border-radius:0 0 14px 14px;padding:14px 12px 18px;min-height:200px}
+.turn{display:none;margin-bottom:14px;animation:pop .25s ease}
+.turn.show{display:block}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.u{text-align:right;margin-bottom:8px}
+.u .b{display:inline-block;background:var(--ink);color:#fff;border-radius:14px 14px 2px 14px;
+      padding:9px 13px;font-size:14px;max-width:78%;text-align:left}
+.u .say{display:block;font-size:11px;color:#8a8577;margin-top:3px}
+.s .who{font-size:11px;color:#8a8577;margin-bottom:4px}
+.s .b{background:var(--card);border:1px solid #e5dfd2;border-radius:14px 14px 14px 2px;
+      padding:11px 13px;font-size:13.5px;line-height:1.75;white-space:pre-wrap;max-width:92%}
+.s .sp{display:flex;gap:6px;align-items:flex-start;margin-top:6px;background:#fff8e3;
+       border:1px dashed #e8c96a;border-radius:10px;padding:7px 10px;font-size:12px;
+       color:#7a6420;line-height:1.6}
+.s .sp::before{content:"🔊";flex:none}
+.state{display:inline-block;font-size:10px;background:#eceff3;color:#5a6472;
+       border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:1px}
+.ctrl{display:flex;gap:10px;margin-top:6px}
+.ctrl button{flex:1;border:none;border-radius:10px;padding:12px;font-size:14px;
+             font-weight:600;cursor:pointer;white-space:nowrap}
+.ctrl .next{background:var(--mcd-y);color:var(--ink)}
+.ctrl .all{background:#fff;border:1px solid #ddd5c4;color:var(--ink)}
+.ctrl .reset{background:none;border:none;color:#98917f;font-weight:400;flex:0 0 64px}
+.facts{margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.facts .f{background:var(--card);border:1px solid #e5dfd2;border-radius:12px;padding:12px}
+.facts .n{font-size:22px;font-weight:800;color:var(--mcd-r)}
+.facts .d{font-size:11.5px;color:#666;margin-top:3px;line-height:1.5}
+footer{margin-top:16px;font-size:11px;color:#98917f;line-height:1.8;padding-bottom:20px}
+footer b{color:#6b6455}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1><span class="brand">喜欢您来♥️</span><br>比门店店员更懂你的点单 Skill</h1>
+  <p>麦当劳 MCP · 语音为主入口 · 记得你常点什么、什么时候来、上次要什么<br>
+     页面每 5 秒自动播放一轮,也可随时手动</p>
+</header>
+
+<div class="phone" id="phone"></div>
+<div class="ctrl">
+  <button class="next" id="next">▶ 播放下一轮</button>
+  <button class="all" id="all">⏩ 全部展开</button>
+  <button class="reset" id="reset">↺ 重播</button>
+</div>
+
+<div class="facts">
+  <div class="f"><div class="n">S0–S9</div><div class="d">复刻门店服务程序的状态机:迎宾→渠道→地址→门店→点餐→定制→复诵→支付→送客</div></div>
+  <div class="f"><div class="n">每轮双形态</div><div class="d">同一轮同时产出屏幕文本(text)与 ≤6 秒口播(speech),语音不念编号、零内部字段</div></div>
+  <div class="f"><div class="n">四层画像</div><div class="d">定制签名/时段习惯/口味偏好/拒单声明 ——「11 天没见了,照旧安格斯,去芝士」全部有据</div></div>
+  <div class="f"><div class="n">五个场景</div><div class="d">健身·省钱·赶时间·随缘·尝新(六维解释),报价带渠道、热量带口径</div></div>
+  <div class="f"><div class="n">27+33 项</div><div class="d">自检与流程不变量全绿;35 个 MCP 工具全链路实测,只读+试算,不碰支付</div></div>
+  <div class="f"><div class="n">地址必问</div><div class="d">确认地址前不查门店;打烊如实报开门时间;预约落可约窗口而非营业时刻</div></div>
+</div>
+
+<footer>
+  <b>这是什么:</b>「mcd-what-to-eat-today」Skill 的免 Token 在线演示。<br>
+  <b>诚实声明:</b>页面对话由<b>离网假数据驱动真实状态机</b>逐轮生成(再生成命令见
+  demo/REGENERATE.md),非手写剧本;价格与菜单为演示数据,真实使用以 MCP 试算为准;
+  演示不含任何真实个人信息(地址已虚构)。<br>
+  <b>真实使用:</b>任意 MCP 客户端 + 麦当劳 MCP 服务(Bearer Token),见仓库
+  MCP_INTEGRATION.md。
+</footer>
+</div>
+
+<script>
+const ROUNDS = [
+ {
+  "label": "迎宾+渠道(意图3:宾至如归)",
+  "user_say": "我要点麦当劳",
+  "state": "S0+S1",
+  "text": "喜欢您来♥️，10 天没见了。\n\n今天店里吃，还是送到家？\n常订外送\n1 送到家★\n2 堂食\n3 外带\n4 得来速\n回数字就行",
+  "speech": "喜欢您来，十天没见了。 今天店里吃，还是送到家？"
+ },
+ {
+  "label": "外送渠道(口语)",
+  "user_say": "送到家",
+  "state": "S3A",
+  "text": "送到哪个地址?\n共2个,常用置顶★\n1 静安区示范路66号5号楼302室★\n2 南区演示大道8号1101室\n回数字就行",
+  "speech": "送到哪个地址？常送的那个排第一。"
+ },
+ {
+  "label": "S3A 选地址",
+  "user_say": "1",
+  "state": "S3B",
+  "text": "送到上海市静安区示范路66号5号楼302室\n上海静安沪太路341号送\n营业中,+5min\n1 确认\n2 换店\n3 换地址\n回数字就行",
+  "speech": "送到静安区示范路66号5号楼302室，上海静安沪太路341号送，对吗？"
+ },
+ {
+  "label": "S3B 确认地址与门店",
+  "user_say": "确认",
+  "state": "S4",
+  "text": "放哪儿？\n1 门口\n2 前台\n3 门口+电话\n回数字就行",
+  "speech": "放门口，还是前台？"
+ },
+ {
+  "label": "S4 放置点",
+  "user_say": "门口",
+  "state": "S5",
+  "text": "您要点什么？\n你点过 4 次这套套餐\n1 照旧 安格斯 ¥48.5\n2 换 培根安格斯厚牛堡 ¥48.5\n3 看看菜单\n4 换店\n回数字就行",
+  "speech": "照旧安格斯，还是换换？"
+ },
+ {
+  "label": "口语模糊点单(B3)",
+  "user_say": "安格斯",
+  "state": "S5",
+  "text": "您是说「安格斯单人餐」吗？\n1 是\n2 不是\n回数字就行",
+  "speech": "您是说安格斯单人餐吗？"
+ },
+ {
+  "label": "复述确认",
+  "user_say": "对",
+  "state": "S6",
+  "text": "定制按老样子?\n去芝士 已挂上\n1 就这样\n2 换个主食\n回数字就行",
+  "speech": "照旧，去芝士挂上了，行吗？"
+ },
+ {
+  "label": "声明不吃(A3)",
+  "user_say": "我不吃芝士",
+  "state": "S6",
+  "text": "好，汉堡去吉士。\n1 回 1-2 继续\n回数字就行",
+  "speech": "好，汉堡去吉士。"
+ },
+ {
+  "label": "场景切换(口语)",
+  "user_say": "健身",
+  "state": "S5S",
+  "text": "健身的话，\n按麦乐送价给你挑（2 项达标）\n1 安格斯厚牛堡 ¥36.5 单品550kcal\n2 可口可乐中杯 ¥11 单品180kcal\n3 看看菜单\n回数字就行",
+  "speech": "健身的话，给您挑好了。"
+ },
+ {
+  "label": "选场景推荐",
+  "user_say": "1",
+  "state": "S6",
+  "text": "定制按老样子?\n去芝士 已挂上\n1 就这样\n2 换个主食\n回数字就行",
+  "speech": "照旧，去芝士挂上了，行吗？"
+ },
+ {
+  "label": "定制确认",
+  "user_say": "就这样",
+  "state": "S7",
+  "text": "您点的是:\n培根安格斯厚牛堡\n去芝士\n实付 ¥48.5\n1 确认下单\n2 改一下\n回数字就行",
+  "speech": "您点的是培根安格斯厚牛堡。 去芝士。 四十八元五，确认吗？"
+ },
+ {
+  "label": "复诵确认下单",
+  "user_say": "确认下单",
+  "state": "S8",
+  "text": "已下单,扫码或在 APP 里付款。\n不付款会自动关闭,不扣钱",
+  "speech": "已下单，在APP里付款就行。"
+ }
+];
+const phone = document.getElementById('phone');
+let i = 0;
+// 🔴 自动播放(2026-10-11):进页即播,每 5 秒一轮,到最后停;
+//    手动「下一轮」会重置 5 秒计时(不连跳),「全部展开」「重播」各自接管。
+//    不用 requestAnimationFrame —— IAB webview rAF 不触发(见下)。
+const STEP_MS = 5000;
+let timer = null;
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+function renderOne(r, animate){
+  const t = document.createElement('div');
+  // 直接同步加 show:CSS animation 会在 display:none→block 时自动播放。
+  // 🔴 不用 requestAnimationFrame 延迟加类 —— 实测部分 webview(如 IAB)
+  //    rAF 回调不触发,气泡永远不显示。
+  t.className = 'turn show';
+  t.innerHTML =
+    '<div class="u"><span class="b">'+esc(r.user_say)+'</span>' +
+    (r.label ? '<span class="say">↳ '+esc(r.label)+'</span>' : '') + '</div>' +
+    '<div class="s"><div class="who">AI 服务员<span class="state">'+esc(r.state)+'</span></div>' +
+    '<div class="b">'+esc(r.text)+'</div>' +
+    (r.speech ? '<div class="sp">'+esc(r.speech)+'</div>' : '') + '</div>';
+  phone.appendChild(t);
+  t.scrollIntoView({block:'nearest'});
+}
+function atEnd(){return i>=ROUNDS.length-1}
+function stopAuto(){if(timer){clearInterval(timer);timer=null}}
+function startAuto(){stopAuto();timer=setInterval(function(){
+  if(atEnd()){stopAuto();return}
+  i++;renderOne(ROUNDS[i],true);
+}, STEP_MS)}
+function init(){phone.innerHTML='';i=0;renderOne(ROUNDS[0],false)}
+document.getElementById('next').onclick = function(){
+  if(atEnd()){stopAuto();return}
+  i++;renderOne(ROUNDS[i],true);
+  if(timer) startAuto();          // 手动走一轮后,重新计满 5 秒
+};
+document.getElementById('all').onclick = function(){
+  stopAuto();                     // 全部展开即接管,自动播放停
+  while(i<ROUNDS.length-1){i++;renderOne(ROUNDS[i],false)}
+};
+document.getElementById('reset').onclick = function(){init();startAuto()};
+init();
+startAuto();
+</script>
+</body>
+</html>

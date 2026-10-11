@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>今日麦门卡 · 今天吃什么</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  background:#f5f5f5;padding:20px 12px;display:flex;justify-content:center;
+}
+.card{width:100%;max-width:375px;background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.12)}
+.head{background:linear-gradient(135deg,#FFC72C 0%,#FF9E1B 100%);padding:22px 20px 18px;position:relative}
+.head::after{content:'';position:absolute;bottom:-14px;left:0;right:0;height:28px;background:#fff;border-radius:50% 50% 0 0/100% 100% 0 0}
+.eyebrow{font-size:12px;color:#7A5200;font-weight:600;letter-spacing:.06em;margin-bottom:8px}
+.title{font-size:26px;font-weight:800;color:#3A2500;line-height:1.25;letter-spacing:-.01em}
+.title em{font-style:normal;display:block;font-size:15px;font-weight:600;color:#5A3D00;margin-top:8px;line-height:1.5}
+.body{padding:26px 20px 20px}
+.greet{background:#FFF8E6;border-left:3px solid #FFC72C;border-radius:0 10px 10px 0;padding:12px 14px;margin-bottom:18px}
+.greet p{font-size:14px;color:#5A3D00;line-height:1.7;font-weight:500}
+.greet .meta{font-size:11px;color:#A08040;margin-top:6px}
+
+.sec-label{font-size:11px;font-weight:700;color:#B08700;letter-spacing:.08em;margin-bottom:9px;display:flex;align-items:center;gap:6px}
+.sec-label::before{content:'';width:3px;height:12px;background:#FFC72C;border-radius:2px}
+
+.item{background:#FAFAFA;border:1px solid #F0F0F0;border-radius:14px;padding:15px 16px;margin-bottom:10px}
+.item.main{background:linear-gradient(180deg,#FFF9EC 0%,#FFFDF8 100%);border-color:#FFE9B0}
+.item.alt{background:#F8F8F8;border-color:#ECECEC}
+
+.row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:8px}
+.nm{font-size:16px;font-weight:700;color:#2A2A2A;line-height:1.35}
+.nm .mark{font-size:11px;color:#B08700;font-weight:600;vertical-align:middle;margin-right:5px}
+.price{font-size:19px;font-weight:800;color:#E8332A;white-space:nowrap;line-height:1.1}
+.price s{font-size:12px;color:#BBB;font-weight:500;margin-right:5px}
+.save{font-size:11px;color:#0A8A4A;font-weight:700;background:#E8F8F0;padding:2px 7px;border-radius:20px;margin-top:5px;display:inline-block}
+
+.mods{margin-top:10px;padding-top:10px;border-top:1px dashed #E4E4E4}
+.mods-t{font-size:11px;color:#999;margin-bottom:6px;font-weight:600}
+.mod{display:inline-block;font-size:12px;color:#7A5200;background:#FFF4D6;border:1px solid #FFE4A8;border-radius:7px;padding:3px 9px;margin:0 5px 5px 0;font-weight:600}
+.mod.gray{color:#777;background:#F0F0F0;border-color:#E4E4E4}
+
+.nutri{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.nutri span{font-size:11px;color:#666;background:#fff;border:1px solid #E8E8E8;border-radius:6px;padding:3px 8px;font-weight:600}
+.nutri .na{color:#999;background:#FAFAFA;border-style:dashed}
+
+.why{margin-top:11px;padding-top:11px;border-top:1px dashed #E4E4E4;font-size:12.5px;color:#666;line-height:1.65}
+.why b{color:#0A8A4A;font-weight:700}
+
+.verdict{margin-top:14px;background:#2A2A2A;border-radius:14px;padding:14px 16px;color:#fff}
+.verdict .vt{font-size:11px;color:#FFC72C;font-weight:700;letter-spacing:.06em;margin-bottom:7px}
+.verdict .vb{font-size:13.5px;line-height:1.6;color:#E8E8E8}
+
+.foot{padding:16px 20px 20px;border-top:1px solid #F2F2F2;background:#FCFCFC}
+.src{font-size:11px;color:#999;line-height:1.75;margin-bottom:12px}
+.src b{color:#666;font-weight:700}
+.cta{display:block;text-align:center;background:#FFC72C;color:#3A2500;font-size:15px;font-weight:800;
+     padding:13px;border-radius:12px;text-decoration:none;letter-spacing:.01em}
+.cta:hover{background:#FFB800}
+.disclaimer{font-size:10.5px;color:#BBB;text-align:center;margin-top:11px;line-height:1.6}
+
+@media print{body{background:#fff;padding:0}.card{box-shadow:none}}
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="head">
+    <div class="eyebrow">🍔 今天吃什么 · 麦门随机点单官</div>
+    <div class="title">照你最近的<em>外加一条有理由的偏离</em></div>
+  </div>
+
+  <div class="body">
+
+    <div class="greet">
+      <p>「欢迎您来，11 天没见了。」<br>「您平时都是 12 点前后，今天晚了不少。」</p>
+      <div class="meta">依据：历史最集中 12 点 · 当前 20 点 · 距上次 11 天</div>
+    </div>
+
+    <div class="sec-label">照你最近的</div>
+    <div class="item main">
+      <div class="row">
+        <div class="nm"><span class="mark">老样子</span>经典安格斯单人餐</div>
+        <div class="price"><s>¥102</s>¥69.9</div>
+      </div>
+      <div class="save">已省 ¥32.1 · 麦金卡专享</div>
+      <div class="mods">
+        <div class="mods-t">自动带上的签名 · 你不用再说一遍</div>
+        <span class="mod">芝士安格斯厚牛堡 · 去高达干酪片</span>
+        <span class="mod">风味双层深海鳕鱼堡 · 去吉士</span>
+        <span class="mod gray">可口可乐中杯 · 少冰</span>
+      </div>
+      <div class="nutri">
+        <span class="na">热量数据不全 · 缺 1 项，不估算</span>
+      </div>
+    </div>
+
+    <div class="sec-label" style="margin-top:18px">换个吃</div>
+    <div class="item alt">
+      <div class="row">
+        <div class="nm"><span class="mark">偏离</span>人气超值四件套随心选</div>
+        <div class="price"><s>¥57</s>¥28</div>
+      </div>
+      <div class="save">已省 ¥29.0</div>
+      <div class="nutri">
+        <span>🔥 1091 kcal</span>
+        <span>💪 蛋白 38g</span>
+        <span>🧂 钠 1710mg</span>
+      </div>
+      <div class="why">比老样子<b>省 ¥41.9</b>，是 4 件套里省得最多的一档 —— 你卡包里刚好有能用的券。</div>
+    </div>
+
+    <div class="verdict">
+      <div class="vt">一句话结论</div>
+      <div class="vb">省钱吃 → 四件套 ¥28（省 ¥29）<br>照常吃 → 安格斯单人餐 ¥69.9（省 ¥32.1）</div>
+    </div>
+
+  </div>
+
+  <div class="foot">
+    <div class="src">
+      <b>数据来源</b>：麦当劳官方 MCP 实时查询<br>
+      order-list · query-order · query-meals · query-my-coupons<br>
+      口径：菜单 107 项 · 卡包券 5 张（可用 2 / 跳过 3）<br>
+      <b>截至</b> 2026-10-11 12:00 · 门店与商品编码已脱敏
+    </div>
+    <a class="cta" href="https://github.com/你的用户名/你的仓库名" target="_blank">
+      🍟 让它记住你的口味
+    </a>
+    <div class="disclaimer">
+      参赛作品 · 由开发者独立开发，非麦当劳官方产品<br>
+      餐品价格及供应以麦当劳官方渠道实时结果为准
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

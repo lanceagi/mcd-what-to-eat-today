@@ -1,0 +1,9 @@
+.DS_Store
+.workbuddy/
+.mimosa/
+
+# 真实 Token —— 禁止提交
+.mcd_token
+.env
+.env.local
+mcp-config.json

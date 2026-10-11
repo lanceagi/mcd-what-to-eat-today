@@ -1,0 +1,401 @@
+{
+  "note": "演示画像(离网测试回退用):本文件全部字段为合成演示数据,不来自任何真实账户;真实画像 assets/profile.json 含个人点单历史,已 gitignore 不随仓库分发;fresh clone 无该文件时,测试回退到本文件。数据形态与真实画像一致。",
+  "version": "v2",
+  "source": "observed",
+  "generatedAt": "2026-10-11 18:28:10",
+  "basis": "演示 7 单,跨度 43 天",
+  "failedOrders": [],
+  "droppedOrders": [
+    {
+      "orderId": "99000001",
+      "orderStatus": "订单已取消",
+      "createTime": "2026-10-11 16:56:40"
+    },
+    {
+      "orderId": "99000002",
+      "orderStatus": "订单已取消",
+      "createTime": "2026-10-10 23:21:45"
+    },
+    {
+      "orderId": "99000003",
+      "orderStatus": "订单已取消",
+      "createTime": "2026-10-10 21:33:50"
+    }
+  ],
+  "signature": {
+    "去芝士": {
+      "count": 5,
+      "orders": 4,
+      "level": "high"
+    },
+    "少冰": {
+      "count": 1,
+      "orders": 1,
+      "level": "low"
+    }
+  },
+  "habits": {
+    "n": 7,
+    "peakHour": 12,
+    "peakHourCount": 2,
+    "slotRank": [
+      [
+        "午餐",
+        3
+      ],
+      [
+        "晚餐",
+        2
+      ],
+      [
+        "早餐",
+        1
+      ],
+      [
+        "下午茶",
+        1
+      ]
+    ],
+    "topSlot": "午餐",
+    "topSlotCount": 3,
+    "weekdayRank": [
+      [
+        "周一",
+        2
+      ],
+      [
+        "周二",
+        2
+      ],
+      [
+        "周日",
+        2
+      ],
+      [
+        "周五",
+        1
+      ]
+    ],
+    "basis": "7 单 createTime"
+  },
+  "taste": {
+    "n": 8,
+    "proteinRank": [
+      [
+        "牛",
+        4
+      ],
+      [
+        "鱼",
+        1
+      ],
+      [
+        "猪",
+        1
+      ]
+    ],
+    "flavor": {
+      "辣": 0,
+      "甜": 0,
+      "炸": 1
+    },
+    "categoryRank": [
+      [
+        "主食",
+        7
+      ],
+      [
+        "小食",
+        1
+      ]
+    ],
+    "basis": "8 件商品名聚合(已剥变体后缀)"
+  },
+  "avoid": {
+    "items": [],
+    "basis": "无声明记录(declared.json 不存在)",
+    "log": []
+  },
+  "topStore": "麦当劳上海静安沪太路341号餐厅",
+  "storeRank": [
+    [
+      "麦当劳上海静安沪太路341号餐厅",
+      5
+    ],
+    [
+      "麦当劳上海静安盛源生活广场餐厅",
+      1
+    ],
+    [
+      "麦当劳上海静安演示大道餐厅",
+      1
+    ]
+  ],
+  "avgAmount": 44.0,
+  "couponsUsed": [
+    [
+      "麦金卡免打包服务费",
+      7
+    ],
+    [
+      "麦金卡专享价",
+      4
+    ]
+  ],
+  "channel": {
+    "default": "麦乐送",
+    "rank": [
+      [
+        "麦乐送",
+        7
+      ]
+    ],
+    "ratio": 1.0,
+    "confidence": "high",
+    "deliveryOrders": 7,
+    "note": "麦乐送(orderType=2)下单需先经delivery-query-addresses 取addressId;若用户无地址须先 delivery-create-address"
+  },
+  "orders": [
+    {
+      "orderId": "9000000000000000000000000001",
+      "storeCode": "9999023",
+      "storeName": "麦当劳上海静安沪太路341号餐厅",
+      "orderType": "2",
+      "beType": "2",
+      "channel": "麦乐送",
+      "createTime": "2026-09-29 12:07:25",
+      "totalAmount": "102",
+      "realTotalAmount": "69.9",
+      "totalDiscountAmount": "32.1",
+      "coupons": [
+        {
+          "name": "麦金卡免打包服务费",
+          "save": "3"
+        },
+        {
+          "name": "麦金卡专享价",
+          "save": "23.1"
+        }
+      ],
+      "items": [
+        {
+          "name": "经典安格斯单人餐（麦金卡免配）",
+          "qty": 1
+        },
+        {
+          "name": "双层深海鳕鱼堡",
+          "qty": 1
+        }
+      ],
+      "customs": [
+        {
+          "type": "remove",
+          "label": "去芝士",
+          "code": "102215",
+          "key": "0-0",
+          "raw": "芝士安格斯厚牛堡 高达干酪片(不要)"
+        },
+        {
+          "type": "ice",
+          "label": "少冰",
+          "code": "200002",
+          "key": "1-1",
+          "raw": "可口可乐中杯 冰(少冰)"
+        },
+        {
+          "type": "remove",
+          "label": "去芝士",
+          "code": "100141",
+          "key": "0-0",
+          "raw": "风味双层深海鳕鱼堡 吉士(不要)"
+        }
+      ]
+    },
+    {
+      "orderId": "9000000000000000000000000002",
+      "storeCode": "9999023",
+      "storeName": "麦当劳上海静安沪太路341号餐厅",
+      "orderType": "2",
+      "beType": "2",
+      "channel": "麦乐送",
+      "createTime": "2026-09-28 09:47:44",
+      "totalAmount": "26.9",
+      "realTotalAmount": "19.9",
+      "totalDiscountAmount": "7",
+      "coupons": [
+        {
+          "name": "麦金卡免打包服务费",
+          "save": "1"
+        }
+      ],
+      "items": [
+        {
+          "name": "麦满分单人餐",
+          "qty": 1
+        }
+      ],
+      "customs": []
+    },
+    {
+      "orderId": "9000000000000000000000000003",
+      "storeCode": "9999029",
+      "storeName": "麦当劳上海静安盛源生活广场餐厅",
+      "orderType": "2",
+      "beType": "2",
+      "channel": "麦乐送",
+      "createTime": "2026-09-11 19:24:48",
+      "totalAmount": "46.3",
+      "realTotalAmount": "38.4",
+      "totalDiscountAmount": "7.9",
+      "coupons": [
+        {
+          "name": "麦金卡免打包服务费",
+          "save": "1.9"
+        }
+      ],
+      "items": [
+        {
+          "name": "大堡口福四件套（泰式炭烤风味猪猪堡）",
+          "qty": 1
+        }
+      ],
+      "customs": []
+    },
+    {
+      "orderId": "9000000000000000000000000004",
+      "storeCode": "9999023",
+      "storeName": "麦当劳上海静安沪太路341号餐厅",
+      "orderType": "2",
+      "beType": "2",
+      "channel": "麦乐送",
+      "createTime": "2026-09-06 12:12:38",
+      "totalAmount": "74.9",
+      "realTotalAmount": "43.9",
+      "totalDiscountAmount": "31",
+      "coupons": [
+        {
+          "name": "麦金卡免打包服务费",
+          "save": "1.9"
+        },
+        {
+          "name": "麦金卡专享价",
+          "save": "23.1"
+        }
+      ],
+      "items": [
+        {
+          "name": "经典安格斯单人餐（麦金卡免配）",
+          "qty": 1
+        }
+      ],
+      "customs": [
+        {
+          "type": "remove",
+          "label": "去芝士",
+          "code": "100141",
+          "key": "0-0",
+          "raw": "培根安格斯厚牛堡 吉士(不要)"
+        }
+      ]
+    },
+    {
+      "orderId": "9000000000000000000000000005",
+      "storeCode": "9999023",
+      "storeName": "麦当劳上海静安沪太路341号餐厅",
+      "orderType": "2",
+      "beType": "2",
+      "channel": "麦乐送",
+      "createTime": "2026-08-24 11:50:51",
+      "totalAmount": "78.4",
+      "realTotalAmount": "47.4",
+      "totalDiscountAmount": "31",
+      "coupons": [
+        {
+          "name": "麦金卡免打包服务费",
+          "save": "1.9"
+        },
+        {
+          "name": "麦金卡专享价",
+          "save": "23.1"
+        }
+      ],
+      "items": [
+        {
+          "name": "经典安格斯单人餐（麦金卡免配）",
+          "qty": 1
+        }
+      ],
+      "customs": [
+        {
+          "type": "remove",
+          "label": "去芝士",
+          "code": "100141",
+          "key": "0-0",
+          "raw": "培根安格斯厚牛堡 吉士(不要)"
+        }
+      ]
+    },
+    {
+      "orderId": "9000000000000000000000000006",
+      "storeCode": "9999018",
+      "storeName": "麦当劳上海静安演示大道餐厅",
+      "orderType": "2",
+      "beType": "2",
+      "channel": "麦乐送",
+      "createTime": "2026-08-18 17:50:14",
+      "totalAmount": "47.8",
+      "realTotalAmount": "39.9",
+      "totalDiscountAmount": "7.9",
+      "coupons": [
+        {
+          "name": "麦金卡免打包服务费",
+          "save": "1.9"
+        }
+      ],
+      "items": [
+        {
+          "name": "四拼小食餐",
+          "qty": 1
+        }
+      ],
+      "customs": []
+    },
+    {
+      "orderId": "9000000000000000000000000007",
+      "storeCode": "9999023",
+      "storeName": "麦当劳上海静安沪太路341号餐厅",
+      "orderType": "2",
+      "beType": "2",
+      "channel": "麦乐送",
+      "createTime": "2026-08-16 16:16:47",
+      "totalAmount": "79.4",
+      "realTotalAmount": "48.4",
+      "totalDiscountAmount": "31",
+      "coupons": [
+        {
+          "name": "麦金卡免打包服务费",
+          "save": "1.9"
+        },
+        {
+          "name": "麦金卡专享价",
+          "save": "23.1"
+        }
+      ],
+      "items": [
+        {
+          "name": "经典安格斯单人餐【升级小食送酱】",
+          "qty": 1
+        }
+      ],
+      "customs": [
+        {
+          "type": "remove",
+          "label": "去芝士",
+          "code": "100141",
+          "key": "0-0",
+          "raw": "培根安格斯厚牛堡 吉士(不要)"
+        }
+      ]
+    }
+  ]
+}
