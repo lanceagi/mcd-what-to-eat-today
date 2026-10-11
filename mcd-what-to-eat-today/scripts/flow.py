@@ -362,7 +362,7 @@ class Flow:
                 f"{BRAND}，第一次见面。",
                 facts=["先问三件事，以后不用再说"],
                 options=["牛/鸡/鱼/都行", "汉堡要不要去芝士", "饮料冰量"]),
-                speech="喜欢您来，第一次见面。")
+                speech="喜欢您来♥️，第一次见面呀。")
         last = datetime.strptime(orders[0]["createTime"], "%Y-%m-%d %H:%M:%S")
         days = (self.now - last).days
         hours = (self.now - last).total_seconds() / 3600
@@ -416,7 +416,7 @@ class Flow:
         facts = [f"常订{_short_channel(name)}"] if hist.get("confidence") == "high" else None
         return Turn(self.state, rm.turn("今天店里吃，还是送到家？",
                                         facts=facts, options=opts),
-                    speech="今天店里吃，还是送到家？")
+                    speech="今天店里吃，还是送到家呢？")
 
     # -------------------------------------------------- S2 到店系
     def ask_store_instore(self):
@@ -442,7 +442,7 @@ class Flow:
             facts=[f"{store.get('businessStartTime')}-{store.get('businessEndTime')}"
                    if store.get("businessStartTime") else None, why],
             options=self.options),
-            speech=vc.sayable(f"就这家，{name}，行吗？", 30))
+            speech=vc.sayable(f"就这家，{name}，好不好？", 30))
 
     def swap_store_instore(self):
         be = CHANNELS[self.selection["channel"]]["beType"]
@@ -498,7 +498,7 @@ class Flow:
             "送到哪个地址?",
             facts=[f"共{len(ordered)}个,常用置顶★"],
             options=opts),
-            speech=vc.sayable("送到哪个地址？常送的那个排第一。", 30))
+            speech=vc.sayable("给您送到哪儿呀？常送的那个排第一。", 30))
 
     def ask_store_delivery(self):
         """S3B 地址已确认才查门店。手册④复诵:送到哪 + 谁家送。"""
@@ -593,7 +593,7 @@ class Flow:
         self.state = self._mark("S4")
         self.options = [k for k, _ in DROPOFF]
         return Turn(self.state, rm.turn("放哪儿？", options=self.options),
-                    speech="放门口，还是前台？")
+                    speech="放门口，还是前台呀？")
 
     # -------------------------------------------------- S5 点餐
     def ask_items(self):
@@ -654,7 +654,7 @@ class Flow:
         return Turn(self.state, rm.turn("想看哪一类？",
                                         facts=[f"菜单共 {total} 项"],
                                         options=opts),
-                    speech=vc.sayable("套餐、汉堡、小食、饮品，想看哪一类？", 30))
+                    speech=vc.sayable("套餐、汉堡、小食、饮品，想看哪样呀？", 30))
 
     def ask_menu_page(self):
         """S5MP 翻页轮:每页 2 项 + 更多 + 返回点餐,选品进 S6。"""
@@ -915,7 +915,7 @@ class Flow:
         return Turn(self.state, rm.turn(
             "已下单,扫码或在 APP 里付款。",
             facts=["不付款会自动关闭,不扣钱"]),
-            speech="已下单，在APP里付款就行。")
+            speech="下单好啦，APP里付一下就行。")
 
     def farewell(self, pickup=None):
         self.state = self._mark("S9")
@@ -1005,7 +1005,7 @@ class Flow:
         # 🔴 口播不念数量(cn_count 的 2 会念「二」,量词语境该是「两样」;
         #    数字在口播里本来就易听岔,直接说「挑好了」)
         return Turn(self.state, rm.turn(f"{label}的话，", facts=facts, options=opts),
-                    speech=vc.sayable(f"{label}的话，给您挑好了。", 30))
+                    speech=vc.sayable(f"{label}的话，小姐姐给您挑好啦。", 30))
 
     # -------------------------------------------------- 自由文本偏好
     _PREF = [
