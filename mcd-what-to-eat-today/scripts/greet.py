@@ -86,7 +86,7 @@ def signature_text(profile) -> str:
 def build_greeting(profile, now: datetime):
     orders = profile.get("orders") or []
     if not orders:
-        return {"lines": ["喜欢您来♥️，第一次见面。"],
+        return {"lines": ["喜欢您来♥️，第一次见面呀。"],
                 "guess": None, "basis": "无历史订单"}
 
     last = datetime.strptime(orders[0]["createTime"], "%Y-%m-%d %H:%M:%S")
@@ -104,13 +104,13 @@ def build_greeting(profile, now: datetime):
     # ---- 第一句:问候 + 一件真实的事 ----
     lines = []
     if days <= 1:
-        lines.append(f"喜欢您来♥️，昨天刚吃过。")
+        lines.append(f"喜欢您来♥️，昨天刚吃过啦。")
     elif days <= 7:
-        lines.append(f"喜欢您来♥️，{days} 天没见了。")
+        lines.append(f"喜欢您来♥️，{days} 天没见您啦。")
     elif days <= 60:
-        lines.append(f"喜欢您来♥️，{days} 天没见了。")
+        lines.append(f"喜欢您来♥️，{days} 天没见您啦。")
     else:
-        lines.append("喜欢您来♥️，好久不见了。")
+        lines.append("喜欢您来♥️，好久不见啦。")
 
     # ---- 画像层(A1/A2):先走时刻分支;没触发时用时段习惯/口味补位,保证命中 ----
     guess = None
