@@ -370,19 +370,19 @@ class Flow:
         facts, spoken = [], []
         if hours < 1:
             facts.append("刚吃完没多久")
-            spoken.append("喜欢您来，刚吃完没多久。")
+            spoken.append("喜欢您来♥️，刚吃完没多久呀。")
         elif hours < 12:
             facts.append(f"{int(hours)} 小时前刚吃过")
-            spoken.append(f"喜欢您来，{vc.cn_count(int(hours))}小时前刚吃过。")
+            spoken.append(f"喜欢您来♥️，{vc.cn_count(int(hours))}小时前刚吃过呢。")
         elif days <= 1:
             facts.append("昨天刚吃过")
-            spoken.append("喜欢您来，昨天刚吃过。")
+            spoken.append("喜欢您来♥️，昨天刚吃过啦。")
         elif days <= 60:
             facts.append(f"{days} 天没见了")
-            spoken.append(f"喜欢您来，{vc.cn_count(days)}天没见了。")
+            spoken.append(f"喜欢您来♥️，{vc.cn_count(days)}天没见您啦。")
         else:
             facts.append("好久不见了")
-            spoken.append("喜欢您来，好久不见了。")
+            spoken.append("喜欢您来♥️，好久不见啦。")
         if slot == "夜宵":
             facts.append("这个点还没吃吧？")
             spoken.append("这个点还没吃吧？")
