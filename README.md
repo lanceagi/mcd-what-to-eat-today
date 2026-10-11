@@ -9,10 +9,10 @@
 
 <br>
 
-![MCP](https://img.shields.io/badge/MCD--MCP-35%20tools-DA291C.svg)](MCP_INTEGRATION.md)
-![Skill](https://img.shields.io/badge/WorkBuddy-Skill-FFC72C.svg)](mcd-what-to-eat-today/SKILL.md)
+[![MCP](https://img.shields.io/badge/MCD--MCP-35%20tools-DA291C.svg)](MCP_INTEGRATION.md)
+[![Skill](https://img.shields.io/badge/WorkBuddy-Skill-FFC72C.svg)](mcd-what-to-eat-today/SKILL.md)
 ![Deps](https://img.shields.io/badge/Dependencies-zero-success.svg)
-![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 **零第三方依赖** · **纯 Python 标准库** · **clone 下来即可运行**
 
@@ -27,7 +27,7 @@
 ```text
 你：今天吃什么
 
-麦门：欢迎您来，11 天没见了。
+麦门：喜欢您来♥️，11 天没见了。
       您平时都是 12 点前后，今天晚了不少。
 
       🔥 照你最近的
@@ -184,7 +184,7 @@ git clone --depth 1 https://github.com/lanceagi/mcd-what-to-eat-today $env:TEMP\
 `query-order` 的返回里确实含收件人姓名、手机号、地址。本项目用**白名单机制**，这些字段一律丢弃、不落盘、不输出。参赛规则明确禁止提交他人个人信息，代码里对此做了硬约束。
 
 **Q：我没有历史订单怎么办？**
-冷启动。「欢迎您来，第一次来。」然后直接给你当前菜单里的推荐，一样零参数。
+冷启动。「喜欢您来♥️，第一次来。」然后直接给你当前菜单里的推荐，一样零参数。
 
 **Q：会乱领券吗？**
 不会。实测发现 `auto-bind-coupons` 这个工具名字像只读，实际会一次领走全部可领券（开发时踩过这个坑，给账户领入 6 张）。本项目把它按**写操作**对待，未经你明确要求绝不调用。
