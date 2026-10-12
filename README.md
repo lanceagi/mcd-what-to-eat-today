@@ -144,7 +144,7 @@ git clone --depth 1 https://github.com/lanceagi/mcd-what-to-eat-today $env:TEMP\
 
 | 你看到的 | 是真的吗 | 一句话解释 |
 |---|---|---|
-| 「11 天没见了」 | ✅ 真 | `order-list` 里最近一单的 `createTime`，算出来的 |
+| 「11 天没见您啦」 | ✅ 真 | `order-list` 里最近一单的 `createTime`，算出来的 |
 | 「去芝士」「少冰」 | ✅ 真 | `query-order` 的 `comboItemList[].itemName` 字段原文，只有它含定制 |
 | 「原价 ¥102 → 实付 ¥69.9」 | ✅ 真 | `query-order` 的 `totalAmount` / `realTotalAmount`，不是估算 |
 | 「比老样子少 367 kcal」 | ⚠️ 需查表 | 来自 `list-nutrition-foods`；**表里查不到的项会写「不可估算」，不估值冒充** |
@@ -187,7 +187,7 @@ git clone --depth 1 https://github.com/lanceagi/mcd-what-to-eat-today $env:TEMP\
 `query-order` 的返回里确实含收件人姓名、手机号、地址。本项目用**白名单机制**，这些字段一律丢弃、不落盘、不输出。参赛规则明确禁止提交他人个人信息，代码里对此做了硬约束。
 
 **Q：我没有历史订单怎么办？**
-冷启动。「喜欢您来♥️，第一次来。」然后直接给你当前菜单里的推荐，一样零参数。
+冷启动。「喜欢您来♥️，第一次见面呀。」然后直接给你当前菜单里的推荐，一样零参数。
 
 **Q：会乱领券吗？**
 不会。实测发现 `auto-bind-coupons` 这个工具名字像只读，实际会一次领走全部可领券（开发时踩过这个坑，给账户领入 6 张）。本项目把它按**写操作**对待，未经你明确要求绝不调用。
@@ -321,7 +321,7 @@ mcd-what-to-eat-today/
 - `order-list` **硬上限 10 单无分页**（5 种翻页参数实测全无效），口味漂移的用户画像会过时
 - 签名推断**首次必须经你确认**，不允许静默修改你的偏好
 - 营养表 160 条覆盖不全，套餐靠子项求和；子项查不到则输出「不可估算」
-- `random` / `try_new` / `hurry` 三个场景尚未实装（`saving`/`fitness` 已实装）
+- 五个场景（`saving` / `fitness` / `hurry` / `random` / `try_new`）已全部实装，`hurry` / `try_new` 支持 `--limit` 控制条数
 
 ---
 
@@ -333,9 +333,6 @@ mcd-what-to-eat-today/
 | 参赛声明（官方原文未改动） | [CONTEST_DECLARATION.md](CONTEST_DECLARATION.md) |
 | MCP 接入说明（Server / Tool / 调用流程 / 业务价值） | [MCP_INTEGRATION.md](MCP_INTEGRATION.md) |
 | 脱敏 MCP 配置示例（仅环境变量占位符） | [mcp-config.example.json](mcp-config.example.json) |
-| 源代码 | `mcd-what-to-eat-today/` |
-| 项目结构 |  |
-| --- | --- |
 | 源代码 | `mcd-what-to-eat-today/` |
 | WorkBuddy 开发上下文 | [workbuddy.md](workbuddy.md) |
 

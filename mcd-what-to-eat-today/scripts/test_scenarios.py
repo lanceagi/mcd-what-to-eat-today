@@ -29,8 +29,10 @@
 import json
 import os
 import sys
+import tempfile
 import time
 from datetime import datetime, timedelta
+from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from mcd_client import call_tool as _raw_call_tool  # noqa: E402
@@ -442,10 +444,17 @@ def main():
           + (f" · 环境受限 {env} 项(非缺陷)" if env else ""))
     print("=" * 76)
     if out_json:
-        with open(out_json, "w", encoding="utf-8") as f:
-            json.dump({"city": city, "keyword": keyword, "scenarios": report},
-                      f, ensure_ascii=False, indent=1)
-        print(f"原始结果: {out_json}")
+        if ".." in out_json:
+            raise SystemExit(f"--json 输出路径不得含 ..:{out_json}")
+        root = os.path.realpath(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        dest = os.path.realpath(out_json)
+        allowed = (root + os.sep, os.path.realpath(tempfile.gettempdir()) + os.sep)
+        if not dest.startswith(allowed):
+            raise SystemExit(f"--json 输出须在技能目录或系统临时目录内:{out_json}")
+        Path(dest).write_text(
+            json.dumps({"city": city, "keyword": keyword, "scenarios": report},
+                       ensure_ascii=False, indent=1), encoding="utf-8")
+        print(f"原始结果: {dest}")
     # 🔴 环境受限不算失败 —— 深夜跑到店里都关门了,那是事实不是 bug。
     return 1 if bad else 0
 

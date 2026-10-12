@@ -3,13 +3,20 @@
 
 职责:鉴权、JSON-RPC 调用、响应文本中业务 JSON 的提取。
 安全:Token 只从环境变量 MCD_MCP_TOKEN 或 ~/.mcd_token 读取,绝不硬编码、绝不打印。
+SSRF 防线(2026-10-11 起,按 Mimosa 安全扫描要求加固,对合法端点行为不变):
+- _assert_safe_url():仅允许 https + 域名白名单 mcp.mcd.cn,DNS 解析到
+  非公网地址(内网/环回/链路本地)即拒绝,并禁用 HTTP 重定向(防 SSRF/DNS rebinding)。
 """
+import ipaddress
 import json
 import os
 import re
+import socket
 import urllib.request
+from urllib.parse import urlsplit
 
 BASE_URL = "https://mcp.mcd.cn"
+ALLOWED_HOSTS = {"mcp.mcd.cn"}
 
 _CALL_ID = [100]
 
@@ -29,7 +36,33 @@ def load_token() -> str:
     )
 
 
+def _assert_safe_url(url: str) -> None:
+    """SSRF 边界:仅 https、仅白名单域名、解析结果必须全为公网 IP、禁重定向。"""
+    u = urlsplit(url)
+    if u.scheme != "https":
+        raise RuntimeError(f"仅允许 https 请求,拒绝 scheme={u.scheme!r}")
+    if u.hostname not in ALLOWED_HOSTS:
+        raise RuntimeError(f"目标主机 {u.hostname!r} 不在白名单 {sorted(ALLOWED_HOSTS)}")
+    try:
+        infos = socket.getaddrinfo(u.hostname, 443, proto=socket.IPPROTO_TCP)
+    except socket.gaierror as e:
+        raise RuntimeError(f"域名解析失败 {u.hostname}: {e}")
+    for *_ , sa in infos:
+        ip = ipaddress.ip_address(sa[0])
+        if not ip.is_global:
+            raise RuntimeError(f"{u.hostname} 解析到非公网地址 {ip},疑似内网或 DNS 劫持,已拒绝")
+
+
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        raise RuntimeError(f"禁止重定向(收到 {code} → {newurl})")
+
+
+_OPENER = urllib.request.build_opener(_NoRedirect)
+
+
 def _rpc(payload: dict, timeout: int = 30) -> dict:
+    _assert_safe_url(BASE_URL)
     req = urllib.request.Request(
         BASE_URL,
         data=json.dumps(payload).encode("utf-8"),
@@ -40,7 +73,7 @@ def _rpc(payload: dict, timeout: int = 30) -> dict:
         },
         method="POST",
     )
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
+    with _OPENER.open(req, timeout=timeout) as resp:
         return json.loads(resp.read().decode("utf-8"))
 
 

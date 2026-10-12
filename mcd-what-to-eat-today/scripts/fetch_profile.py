@@ -20,6 +20,7 @@ import re
 import sys
 from collections import Counter
 from datetime import datetime
+from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from mcd_client import call_tool  # noqa: E402
@@ -322,12 +323,16 @@ def build_profile(max_orders: int = 10) -> dict:
 
 
 def main():
-    out = sys.argv[1] if len(sys.argv) > 1 else os.path.join(
-        os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "assets", "profile.json")
+    root = os.path.realpath(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    raw = sys.argv[1] if len(sys.argv) > 1 else os.path.join(root, "assets", "profile.json")
+    if ".." in raw:
+        raise SystemExit(f"输出路径不得含 ..:{raw}")
+    out = os.path.realpath(raw)
+    if not out.startswith(root + os.sep):
+        raise SystemExit(f"输出路径须在技能目录内:{raw}")
     profile = build_profile()
     os.makedirs(os.path.dirname(out), exist_ok=True)
-    with open(out, "w", encoding="utf-8") as f:
-        json.dump(profile, f, ensure_ascii=False, indent=2)
+    Path(out).write_text(json.dumps(profile, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"画像已写入 {out}")
     print(f"口径: {profile['basis']}")
     print("签名推断:")

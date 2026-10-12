@@ -23,13 +23,10 @@ from flow import Flow, compact_address  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 PROFILE = os.path.join(HERE, "..", "assets", "profile.json")
-# 离网回退:公开仓库 fresh clone 没有 profile.json(个人画像,已 gitignore),
-# 回退演示画像 profile.demo.json —— 测试套件要「clone 即可离网跑」,这是硬前提。
-PROFILE_DEMO = os.path.join(HERE, "..", "assets", "profile.demo.json")
-
-
-def profile_path():
-    return PROFILE if os.path.exists(PROFILE) else PROFILE_DEMO
+# 公开仓 fresh clone 无 profile.json(个人画像,gitignore 不分发)时回退演示画像
+# profile.demo.json —— 与 selftest.py profile_path() 同规则;两文件并存时真实画像优先。
+if not os.path.exists(PROFILE):
+    PROFILE = os.path.join(HERE, "..", "assets", "profile.demo.json")
 
 FAKE_STORES = [
     {"storeCode": "1450523", "storeName": "麦当劳上海静安沪太路341号餐厅",
@@ -40,8 +37,8 @@ FAKE_STORES = [
      "businessStartTime": "00:00", "businessEndTime": "23:59"},
 ]
 FAKE_ADDRESSES = [
-    {"addressId": "a1", "label": "上海市静安区示范路8号201室"},
-    {"addressId": "a2", "label": "上海市静安区演示大道8号1101室"},
+    {"addressId": "a1", "label": "上海市静安区沪太路341号3单元201室"},
+    {"addressId": "a2", "label": "示例市南区演示大道8号1101室"},
 ]
 FAKE_MENU = {
     # 镜像真实菜单:用户历史最高频是「经典安格斯单人餐」套餐,
@@ -137,7 +134,7 @@ class FakeApi:
 
 
 def profile():
-    with open(profile_path(), encoding="utf-8") as f:
+    with open(PROFILE, encoding="utf-8") as f:
         return json.load(f)
 
 
@@ -233,7 +230,7 @@ def i1c_history_ratio_does_not_skip():
     f = Flow(profile=p, api=FakeApi(), at=AT)
     txt = f.turn_text()
     assert f.state == "S1", "confidence=high 不得免问"
-    assert "今天店里吃，还是送到家？" in txt, f"必须问渠道,实际:\n{txt}"
+    assert "今天店里吃，还是送到家呀？" in txt, f"必须问渠道,实际:\n{txt}"
     assert "★" in txt, f"历史众数渠道应加星标,实际:\n{txt}"
 
 
@@ -263,7 +260,7 @@ def i2b_address_label_never_leaks_name():
 def i2c_swap_address_and_store():
     f = Flow(profile=profile(), api=FakeApi(), at=AT)
     f.reply(digit_for(f, "送到家"))
-    t = f.reply("2").text          # S3A 选第 2 个地址(演示地址)
+    t = f.reply("2").text          # S3A 选第 2 个地址(演示大道)
     assert "演示大道" in t, f"选完地址应复诵该地址,实际:\n{t}"
     assert_no_leak(t, BANNED)
     t2 = f.reply("2")              # S3B 换店
@@ -338,7 +335,7 @@ def i8_no_internal_fields():
 
 
 def i9_profile_has_no_pii():
-    with open(profile_path(), encoding="utf-8") as f:
+    with open(PROFILE, encoding="utf-8") as f:
         raw = f.read()
     for k in ("fullAddress", "contactName", "phone", "mobilePhone", "payId",
               "deliveryInfo"):
@@ -382,7 +379,7 @@ def i12_cancelled_order_not_counted():
     src = open(os.path.join(HERE, "fetch_profile.py"), encoding="utf-8").read()
     assert "CANCELLED" in src, "未定义 CANCELLED 集合"
     assert "订单已取消" in fetch_profile.CANCELLED
-    with open(profile_path(), encoding="utf-8") as f:
+    with open(PROFILE, encoding="utf-8") as f:
         raw = f.read()
     assert "droppedOrders" in raw, "画像未记录被剔除的单"
     assert "订单已取消" not in json.loads(raw)["orders"][0].get("orderStatus", "") or True
@@ -461,10 +458,10 @@ def i16_address_confirmed_before_stores():
     地址分页不超 4 项;选完地址才进门店确认轮。
     """
     five = [{"addressId": f"a{k}", "label": lbl} for k, lbl in enumerate([
-        "上海市静安区示范路8号201室",
+        "上海市静安区沪太路341号3单元201室",
         "上海市浦东新区陆家嘴环路1366号大厦",
         "上海市嘉定区民主街385号羽毛球馆",
-        "上海市静安区演示大道8号1101室",
+        "示例市南区演示大道8号1101室",
         "山东省青岛市市南区香港中路77号"])]
     api = FakeApi(addresses=five)
     f = Flow(profile=profile(), api=api, at=AT)
@@ -638,7 +635,7 @@ def i18_usual_missing_degrades():
     f.reply("1"); f.reply("1"); f.reply("1")     # 地址 → 门店 → 放置点 → S5
     txt = f.ctx["_last_text"]
     assert "照旧" not in txt, f"菜单里没有照旧还推照旧:\n{txt}"
-    assert "常点的这套" in txt and "没有" in txt, f"必须如实说没有:\n{txt}"
+    assert "常点的那套" in txt and "没有" in txt, f"必须如实说没有:\n{txt}"
     assert len(f.options) <= 4, f"降级轮选项超预算:{f.options}"
     assert f.order is None, "降级轮不许自带订单"
     out = f.reply("1")                            # 选替代 → S6 细节
@@ -715,7 +712,7 @@ def i21_s5_swap_store_escape():
     f2 = Flow(profile=p, api=FakeApi(menu=menu), at=AT)
     f2.reply(digit_for(f2, "送到家"))
     f2.reply("1"); f2.reply("1"); f2.reply("1")
-    assert "常点的这套" in f2.ctx["_last_text"]
+    assert "常点的那套" in f2.ctx["_last_text"]
     assert "换店" in f2.options, f"降级轮必须有换店:{f2.options}"
     t2 = f2.reply(str(len(f2.options)))           # 最后一个 = 换店
     assert t2.state == "S3B", f"降级轮换店应回 S3B,实际 {t2.state}:\n{t2.text}"
@@ -729,6 +726,17 @@ def digit_for_browse(text, want):
             if lab.startswith(want):
                 return n
     raise AssertionError(f"屏幕上没有「{want}」分类:\n{text}")
+
+
+def i22_instore_confirm_advances():
+    """回归:到店系「就这家」必须进点餐轮,不得原地循环(2026-10-12 事故)。"""
+    f = Flow(profile=profile(), api=FakeApi(), at=AT)
+    f.reply(digit_for(f, "堂食"))
+    assert f.state == "S2", f"堂食应进选店轮,实际 {f.state}"
+    t = f.reply("就这家")
+    assert t.state == "S5", f"「就这家」应进点餐轮,实际 {t.state}:\n{t.text}"
+    assert f.options and f.options[0] in ("照旧", "换个"), \
+        f"点餐轮选项异常:{f.options}"
 
 
 def main():
@@ -765,6 +773,7 @@ def main():
     t("I19 选看菜单进分类轮不误下单", i19_browse_menu_enters_categories)
     t("I20 看菜单分类翻页选品全链", i20_browse_page_and_pick)
     t("I21 S5 换店逃生口(含降级轮)", i21_s5_swap_store_escape)
+    t("I22 到店确认进点餐轮不循环", i22_instore_confirm_advances)
 
     print("=" * 72)
     print("流程不变量测试(全程离网,假 API)")

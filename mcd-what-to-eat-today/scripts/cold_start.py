@@ -38,6 +38,7 @@ import os
 import re
 import sys
 from datetime import datetime
+from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from mcd_client import call_tool, call_tool_text, parse_coupons  # noqa: E402
@@ -228,9 +229,15 @@ def main():
 
     profile = build_cold_profile(sig, answers)
     if args.write:
-        with open(args.profile, "w", encoding="utf-8") as f:
-            json.dump(profile, f, ensure_ascii=False, indent=2)
-        print(f"冷启动画像已写入 {args.profile}")
+        if ".." in args.profile:
+            raise SystemExit(f"输出路径不得含 ..:{args.profile}")
+        root = os.path.realpath(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        dest = os.path.realpath(args.profile)
+        if not dest.startswith(root + os.sep):
+            raise SystemExit(f"输出路径须在技能目录内:{args.profile}")
+        Path(dest).write_text(json.dumps(profile, ensure_ascii=False, indent=2),
+                              encoding="utf-8")
+        print(f"冷启动画像已写入 {dest}")
     print(json.dumps(profile, ensure_ascii=False, indent=2)[:900])
 
 

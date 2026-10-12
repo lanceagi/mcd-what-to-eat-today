@@ -39,6 +39,7 @@ import os
 import re
 import sys
 from datetime import datetime
+from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import render_mobile as rm  # noqa: E402
@@ -56,7 +57,7 @@ DECLARED_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__f
                              "assets", "declared.json")
 
 BRAND = "喜欢您来♥️"
-FAREWELL = "喜欢您来，慢走。"
+FAREWELL = "喜欢您来♥️，慢走呀。"
 
 # S1 四个选项 → (渠道, takeWayCode)。takeWayCode 只能从 calculate-price 的
 # takeWayList 取,这里的取值与实测一致,首次组装时仍会向 takeWayList 核对。
@@ -359,7 +360,7 @@ class Flow:
             self.state = self._mark("S0")
             self.options = []
             return Turn(self.state, rm.turn(
-                f"{BRAND}，第一次见面。",
+                f"{BRAND}，第一次见面呀。",
                 facts=["先问三件事，以后不用再说"],
                 options=["牛/鸡/鱼/都行", "汉堡要不要去芝士", "饮料冰量"]),
                 speech="喜欢您来♥️，第一次见面呀。")
@@ -378,10 +379,10 @@ class Flow:
             facts.append("昨天刚吃过")
             spoken.append("喜欢您来♥️，昨天刚吃过啦。")
         elif days <= 60:
-            facts.append(f"{days} 天没见了")
+            facts.append(f"{days} 天没见您啦")
             spoken.append(f"喜欢您来♥️，{vc.cn_count(days)}天没见您啦。")
         else:
-            facts.append("好久不见了")
+            facts.append("好久不见啦")
             spoken.append("喜欢您来♥️，好久不见啦。")
         if slot == "夜宵":
             facts.append("这个点还没吃吧？")
@@ -414,7 +415,7 @@ class Flow:
         self.ctx["why"] = why
         hist = (self.p.get("channel") or {})
         facts = [f"常订{_short_channel(name)}"] if hist.get("confidence") == "high" else None
-        return Turn(self.state, rm.turn("今天店里吃，还是送到家？",
+        return Turn(self.state, rm.turn("今天店里吃，还是送到家呀？",
                                         facts=facts, options=opts),
                     speech="今天店里吃，还是送到家呢？")
 
@@ -495,7 +496,7 @@ class Flow:
         self.state = self._mark("S3A")
         self.options = labels + (["更多地址"] if more else [])
         return Turn(self.state, rm.turn(
-            "送到哪个地址?",
+            "给您送到哪儿呀？",
             facts=[f"共{len(ordered)}个,常用置顶★"],
             options=opts),
             speech=vc.sayable("给您送到哪儿呀？常送的那个排第一。", 30))
@@ -556,7 +557,7 @@ class Flow:
         self.state = self._mark("S3Z")
         self.options = ["约开门后送", "换地址", "先不送了"]
         return Turn(self.state, rm.turn(
-            "这个点还没有店在送:",
+            "这个点能送的店都打烊啦：",
             facts=facts, options=self.options),
             speech=vc.sayable(
                 f"这个点能送的店都打烊了，最早{t0 or ''}开门，约开门后送吗？", 34))
@@ -592,7 +593,7 @@ class Flow:
     def ask_dropoff(self):
         self.state = self._mark("S4")
         self.options = [k for k, _ in DROPOFF]
-        return Turn(self.state, rm.turn("放哪儿？", options=self.options),
+        return Turn(self.state, rm.turn("放哪儿呀？", options=self.options),
                     speech="放门口，还是前台呀？")
 
     # -------------------------------------------------- S5 点餐
@@ -615,8 +616,8 @@ class Flow:
             spoken = (f"您常点的那套没有，换个{name}怎么样？" if alt
                       else "您常点的那套这家店没有，看看菜单或换家店？")
             return Turn(self.state, rm.turn(
-                "常点的这套，这家店没有。",
-                facts=["给你挑了个替代"] if alt else None,
+                "常点的那套，这家店没有呢。",
+                facts=["小姐姐给你挑了个替代"] if alt else None,
                 options=opts),
                 speech=vc.sayable(spoken, 30))
         tag = "套餐" if usual.get("combo") else "单点"
@@ -635,7 +636,7 @@ class Flow:
         self.ctx["cands"] = [c for c in (usual, alt) if c]
         spoken = (f"照旧{rm.short_name(usual['label'], 7)}，还是换换？"
                   if usual else "您要点什么？")
-        return Turn(self.state, rm.turn("您要点什么？", facts=facts, options=opts),
+        return Turn(self.state, rm.turn("今天想吃点什么呀？", facts=facts, options=opts),
                     speech=vc.sayable(spoken, 30))
 
     def ask_menu(self):
@@ -651,7 +652,7 @@ class Flow:
         opts = [mb.bucket_label(b, buckets) for b in mb.BUCKETS]
         self.state = self._mark("S5M")
         self.options = list(mb.BUCKETS)
-        return Turn(self.state, rm.turn("想看哪一类？",
+        return Turn(self.state, rm.turn("想看哪一类呀？",
                                         facts=[f"菜单共 {total} 项"],
                                         options=opts),
                     speech=vc.sayable("套餐、汉堡、小食、饮品，想看哪样呀？", 30))
@@ -884,7 +885,7 @@ class Flow:
             tail = "本单没有对应商品，" + "、".join(not_mounted) + "未生效"
         elif gaps:
             tail = "⚠️ " + "；".join(gaps)
-        return Turn(self.state, rm.turn("定制按老样子?", facts=facts,
+        return Turn(self.state, rm.turn("定制还按老样子来吗？", facts=facts,
                                         tail=tail, options=self.options),
                     speech=spoken)
 
@@ -913,7 +914,7 @@ class Flow:
         self.state = self._mark("S8")
         self.options = []
         return Turn(self.state, rm.turn(
-            "已下单,扫码或在 APP 里付款。",
+            "下单好啦，扫码或在 APP 里付款。",
             facts=["不付款会自动关闭,不扣钱"]),
             speech="下单好啦，APP里付一下就行。")
 
@@ -1063,7 +1064,10 @@ class Flow:
         news = self.ctx.get("declared_new") or []
         if not news:
             return 0
-        path = path or DECLARED_PATH
+        base = os.path.realpath(os.path.dirname(DECLARED_PATH))
+        path = os.path.realpath(path or DECLARED_PATH)
+        if ".." in str(path) or not path.startswith(base + os.sep):
+            raise ValueError(f"declared 写入路径越界:{path}")
         entries = []
         if os.path.exists(path):
             try:
@@ -1081,8 +1085,8 @@ class Flow:
             seen.add(k)
             written += 1
         os.makedirs(os.path.dirname(path), exist_ok=True)
-        with open(path, "w", encoding="utf-8") as f:
-            json.dump(entries, f, ensure_ascii=False, indent=2)
+        Path(path).write_text(json.dumps(entries, ensure_ascii=False, indent=2),
+                              encoding="utf-8")
         return written
 
     # -------------------------------------------------- 调度
@@ -1209,7 +1213,10 @@ class Flow:
                 return self.ask_address()
             return self.ask_store_instore()
         if self.state == "S2":
-            return self.swap_store_instore() if i == 1 else self.ask_store_instore()
+            # 🔴 2026-10-12 修:i==0(就这家)此前误调 ask_store_instore(),
+            #    等于把选店轮原样重渲染一遍 —— 到店客永远进不了点餐轮(死循环)。
+            #    确认后应进点餐 ask_items();换一家才走 swap_store_instore()。
+            return self.swap_store_instore() if i == 1 else self.ask_items()
         if self.state == "S3A":
             # 🔴 地址先确认:选了地址才查门店;「更多地址」只翻页
             if self.options[i] == "更多地址":
@@ -1242,7 +1249,7 @@ class Flow:
             if self.options[i] == "换店":
                 if not self.stores:
                     return Turn(self.state,
-                                rm.turn("这家店没法换，换个地址试试。"),
+                                rm.turn("这家店没法换呢，换个地址试试吧。"),
                                 speech="这家店没法换，您换个地址试试。")
                 return self.swap_store()
             cands = self.ctx.get("cands") or []
@@ -1273,7 +1280,7 @@ class Flow:
             return self.pay()
         if self.state == "S8":
             return self.farewell(self.ctx.get("pickup"))
-        return Turn(self.state, rm.turn("已经点完了。"), speech="已经点完了。")
+        return Turn(self.state, rm.turn("已经点好单啦。"), speech="已经点好单啦。")
 
     # -------------------------------------------------- 不变量
     def invariants(self):

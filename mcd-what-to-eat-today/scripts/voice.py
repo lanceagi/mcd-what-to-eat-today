@@ -238,7 +238,7 @@ def _selfcheck():
     print("\n[8] flow S7 复诵口播(金额中文)")
     f2 = Flow(profile=tf.profile(), api=tf.FakeApi(), at=tf.AT)
     f2.turn_text()                 # S0+S1(greet 之后必须先问渠道)
-    for r in ("送到家", "示范路", "确认", "门口"):   # S3A 口语选地址 → S3B → S4
+    for r in ("送到家", "沪太路", "确认", "门口"):   # S3A 口语选地址 → S3B → S4
         f2.reply(r)
     f2.reply("安格斯")            # B3:模糊命中 → 复述确认
     f2.reply("对")                # 确认 → S6
@@ -250,7 +250,7 @@ def _selfcheck():
     print("\n[9] 全流程零泄漏 + 不念编号")
     f2 = Flow(profile=tf.profile(), api=tf.FakeApi(), at=tf.AT)
     speeches = [f2.turn_text() and f2.ctx["_last_speech"]]
-    for r in ("送到家", "示范路", "确认", "门口", "1", "就这样", "确认下单"):
+    for r in ("送到家", "沪太路", "确认", "门口", "1", "就这样", "确认下单"):
         f2.reply(r)
         speeches.append(f2.ctx.get("_last_speech") or "")
     bad = []
@@ -295,7 +295,7 @@ def flow_demo():
 
     script = [
         ("S3A 地址(口语:送到家)", "送到家"),
-        ("S3A 选地址(口语:示范路)", "示范路"),
+        ("S3A 选地址(口语:沪太路)", "沪太路"),
         ("S3B 门店(确认)", "确认"),
         ("S4 放置点", "门口"),
         ("B3 复述确认(口语:安格斯)", "安格斯"),
